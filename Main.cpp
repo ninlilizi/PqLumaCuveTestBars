@@ -272,6 +272,7 @@ static LONG     g_savedStyle      = 0;
 static LONG     g_savedExStyle    = 0;
 
 static bool     g_needsResize    = false;
+static bool     g_initialized    = false;
 
 // ---------------------------------------------------------------------------
 // Control IDs
@@ -700,21 +701,22 @@ static LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPara
         return 0;
 
     case WM_COMMAND:
-    {
-        int id   = LOWORD(wParam);
-        int code = HIWORD(wParam);
+        if (g_initialized)
+        {
+            int id   = LOWORD(wParam);
+            int code = HIWORD(wParam);
 
-        if ((id == IDC_EDIT_START || id == IDC_EDIT_END || id == IDC_EDIT_BARS)
-            && (code == EN_CHANGE || code == EN_KILLFOCUS))
-        {
-            ParseControls();
+            if ((id == IDC_EDIT_START || id == IDC_EDIT_END || id == IDC_EDIT_BARS)
+                && (code == EN_CHANGE || code == EN_KILLFOCUS))
+            {
+                ParseControls();
+            }
+            if (id == IDC_COMBO_MODE && code == CBN_SELCHANGE)
+            {
+                ParseControls();
+            }
         }
-        if (id == IDC_COMBO_MODE && code == CBN_SELCHANGE)
-        {
-            ParseControls();
-        }
-    }
-    return 0;
+        return 0;
 
     case WM_KEYDOWN:
         if (wParam == VK_F11)
@@ -868,6 +870,8 @@ int WINAPI wWinMain(HINSTANCE hInst, HINSTANCE, LPWSTR, int nCmdShow)
         MessageBoxW(g_hWnd, L"Failed to initialize Direct3D 11.", L"Error", MB_ICONERROR);
         return 1;
     }
+
+    g_initialized = true;
 
     ShowWindow(g_hWnd, nCmdShow);
     UpdateWindow(g_hWnd);
