@@ -1,7 +1,7 @@
 # Pq Luma Cuve Test-Bars
 ST.2084 PQ Curve visualisation test-bar generator
 
-### NOTE: As this renders in PQ space you must have HDR enabled in your OS for correct results!
+#### NOTE: As this renders in PQ space you must have HDR enabled in your OS for correct results!
 
 This is a simple tool to visualise a sub-section of the PQ curve.
 
